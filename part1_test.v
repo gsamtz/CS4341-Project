@@ -17,7 +17,7 @@ r7 = (~x & ~y & z)|(~w & x & y & ~z)|(w & ~x & y & ~z)|(w & x &y & z);
 r3 = (~y | x & z);
 r6 = (w | ~y) & (~x | ~z) & (y | z | ~w); 
 r9 = (~w & ~x & ~y & ~z) | (~y & z & x) | (w & y & ~z) | (w & y & ~x) | (w & z & x) | (w & z & ~y);
-r8 = (x & ~z) | (~w & y * z) | (~x & ~y & z);
+r8 = (x & ~z) | (~w & y & z) | (~x & ~y & z);
 
 end
 
@@ -27,29 +27,29 @@ endmodule
 module testbench();
 
 reg [4:0] i;
-reg a;
-reg b;
-reg c;
-reg d;
+reg w;
+reg x;
+reg y;
+reg z;
 
 wire f0, f1, f2, f4, f5, f7, f3, f6, f9, f8;
 
 
-Breadboard bb8(a, b, c, d, f0, f1, f2, f3, f4, f5, f6, f7, f9, f8);
+Breadboard bb8(w, x, y, z, f0, f1, f2, f3, f4, f5, f6, f7, f9, f8);
 
 initial begin
-    $display ("| ## | A | B | C | D | F0 | F1 | F2 | F3 | F4 | F5 | F6 | F7 | F8 | F9 |");
+    $display ("| ## | W | X | Y | Z | F0 | F1 | F2 | F3 | F4 | F5 | F6 | F7 | F8 | F9 |");
     $display ("|====+===+===+===+===+====+====+====+====+====+====+====+====+====+====+");
 
     for (i = 0; i < 16; i++) begin
-        a = (i / 8) % 2; //High bit
-		b = (i / 4) % 2;
-		c = (i / 2) % 2;
-		d = (i / 1) % 2; //Low bit	
+        w = (i / 8) % 2; //High bit
+		x = (i / 4) % 2;
+		y = (i / 2) % 2;
+		z = (i / 1) % 2; //Low bit	
 
         #20;
 
-        $display ("|%4d|%3d|%3d|%3d|%3d| %3d| %3d| %3d| %3d| %3d| %3d| %3d| %3d| %3d| %3d|", i, a, b, c, d, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9);
+        $display ("|%4d|%3d|%3d|%3d|%3d| %3d| %3d| %3d| %3d| %3d| %3d| %3d| %3d| %3d| %3d|", i, w, x, y, z, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9);
 		if (i % 4 == 3) //Every fourth row of the table, put in a marker for easier reading.
 		  $write ("|----+---+---+---+---+----+----+----+----+----+----+----+----+----+----+\n");//Write acts a bit like a java System.print
     end
