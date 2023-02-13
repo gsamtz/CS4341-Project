@@ -1,3 +1,6 @@
+// Software discovery:
+// Language: We are using Icarus/iVerilog
+// Editor: We are using VSCode 
 //----------------------------------------------------------------------
 module Breadboard (w, x, y, z, r0, r1, r2, r3, r4, r5, r6, r7, r8, r9);
 
@@ -11,7 +14,7 @@ reg r0, r1, r2, r3, r4, r5, r6, r7, r8, r9,
 
 wire w, x, y, z;
 
-always @ (w, x, y, z, r0, r1, r2, r3, r4, r5, r6, r7, r9, r8) begin
+always @ (w, x, y, z, r0, r1, r2, r3, r4, r5, r6, r7, r8, r9) begin
 
     minT_0 = (~w & ~x & ~y & ~z);
     minT_1 = (~w & ~x & ~y & z);
@@ -35,7 +38,7 @@ always @ (w, x, y, z, r0, r1, r2, r3, r4, r5, r6, r7, r9, r8) begin
 
     r0 = (minT_0 | minT_5 | minT_9 | minT_A | minT_B | minT_D | minT_E | minT_F);
     r1 = (minT_0 | minT_1 | minT_3 | minT_4 | minT_5 | minT_9 | minT_B | minT_D);
-    r2 = (minT_1 | minT_2 | minT_4 | minT_B | minT_D);
+    r2 = (minT_1 | minT_2 | minT_4 | minT_B | minT_E);
     r3 = (minT_0 | minT_1 | minT_4 | minT_5 | minT_7 | minT_8 | minT_9 | minT_C | minT_D | minT_F);
     r4 = (minT_0 | minT_1 | minT_8 | minT_9 | minT_B | minT_C | minT_D);
     r5 = (minT_1 | minT_2 | minT_4 | minT_6 | minT_7 | minT_C | minT_E | minT_F);
@@ -47,6 +50,9 @@ always @ (w, x, y, z, r0, r1, r2, r3, r4, r5, r6, r7, r9, r8) begin
 end
 endmodule
 
+// Software discovery:
+// Language: We are using Icarus/iVerilog
+// Editor: We are using VSCode 
 //----------------------------------------------------------------------
 module testbench();
 
