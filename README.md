@@ -2,9 +2,9 @@
 If you're running iverilog then you can compile and run the program with the following commands.
 
 For Windows
--Go to the following link, and get iverilog-v11-20201123-x64_setup.exe [18.1MB] https://bleyer.org/icarus/
--Run the executable file that you just downloaded.
--Make sure to select the check box for adding PATH variable.
+1. Go to the following link, and get iverilog-v11-20201123-x64_setup.exe [18.1MB] https://bleyer.org/icarus/
+2. Run the executable file that you just downloaded.
+3. Make sure to select the check box for adding PATH variable.
 
 Do the following on terminal.
 
