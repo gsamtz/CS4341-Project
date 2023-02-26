@@ -17,6 +17,47 @@ module OR(a, b, c);
     assign c = a | b;
 endmodule
 
+module XOR(a,b,c);
+	input [31:0] a,b;
+	output [31:0] c;
+
+	assign c= a ^ b;
+endmodule
+
+module NOT(a,c);
+	input [31:0] a;
+	output [31:0] c;
+
+	assign c= ~a;
+endmodule
+
+module NAND(a,b,c);
+	input [31:0] a,b;
+	output [31:0] c;
+
+	assign c= a ~& b;
+endmodule
+
+module NOR(a,b,c);
+	input [31:0] a,b;
+	output [31:0] c;
+
+	assign c= a ~| b;
+endmodule
+
+module XNOR(a,b,c);
+	input [31:0] a,b;
+	output [31:0] c;
+
+	assign c= a ~^ b;
+endmodule
+
+module NOOP(a,c);
+	input [31:0] a;
+	output [31:0] c;
+
+	assign c= ~(~a);
+endmodule
 //=================================================================
 //
 //Decoder {NO NEED TO CHANGE}
@@ -367,8 +408,13 @@ wire       [ 1:0] unkErr;
 // AND
 //----------
 wire [31:0] outputAND;
-
 wire [31:0] outputOR;
+wire[31:0] outputXOR;
+wire[31:0] outputNOT;
+wire[31:0] outputNAND;
+wire[31:0] outputNOR;
+wire[31:0] outputXNOR;
+wire[31:0] outputNOOP;
 
 //----------
 // ADDITION
@@ -405,26 +451,32 @@ reg errLow;
 //
 // Channel 0, Opcode 0000, AND ((NEW ADDITION TO THE LIST))
 // Channel 1, Opcode 0001, OR
+// Channel 2, Opcode 0010, XOR
+// Channel 3, Opcode 0011, NOT
 // Channel 4, Opcode 0100, Addition
 // Channel 5, Opcode 0101, Subtraction
 // Channel 6, Opcode 0110, Mulitplication
 // Channel 7, Opcode 0111, Division (Behavioral)
 // Channel 8, Opcode 1000, Modulus (Behavioral)
+// Channel 9, Opcode 1001, NAND
+// Channel 10, Opcode 1010, NOR
+// Channel 11, Opcode 1011, XNOR
+// Channel 12, Opcode 1100, NOOP
 //
 //=======================================================
 assign channels[ 0]=outputAND; // (before) -> assign channels[ 0]=unknown;
 assign channels[ 1]=outputOR;
-assign channels[ 2]=unknown;
-assign channels[ 3]=unknown;
+assign channels[ 2]=outputXOR; //map xor
+assign channels[ 3]=outputNOT; //map not
 assign channels[ 4]=outputADDSUB;
 assign channels[ 5]=outputADDSUB;
 assign channels[ 6]=unknown;
 assign channels[ 7]=outputQuotient;
 assign channels[ 8]=outputRemainder;
-assign channels[ 9]=unknown;
-assign channels[10]=unknown;
-assign channels[11]=unknown;
-assign channels[12]=unknown;
+assign channels[ 9]=outputNAND;
+assign channels[10]=outputNOR;
+assign channels[11]=outputXNOR;
+assign channels[12]=outputNOOP;
 assign channels[13]=unknown;
 assign channels[14]=unknown;
 assign channels[15]=unknown;
@@ -458,7 +510,12 @@ assign chErr[15]=unkErr;
 // "output [31:0] c" in the original AND module so that the output could be mapped back here
 AND and1(B, A, outputAND); // ADDED THIS MODULE INSTANCE TO TEST IT OUT (IT WORKS!)
 OR or1(B, A, outputOR);
-
+XOR xor1(B, A, outputXOR);
+NOT not1(A, outputNOT);
+NAND nand1(B, A, outputNAND);
+NOR nor1(B, A, outputNOR);
+XNOR xnor1(B, A, outputXNOR);
+NOOP noop1(A, outputNOOP);
 ThirtyTwoBitAddSub add1(B, A, modeSUB, outputADDSUB, Carry, ADDerror);
 BehavioralDivision div1(B, A, outputQuotient, outputRemainder, DIVerror);
 StructMux4 muxOps(channels, select, b);
@@ -664,6 +721,93 @@ module testbench();
  	$write("[%32b]",outputC);
  	$write("[%2b]",error);
 	$write(":OR two Integers");
+	$display(";");
+
+	//---------------------------------
+	// Expected output: 01001000010000000100100101010010
+	inputB=32'b01001000010000000100100001010000;
+	inputA=32'b00001000010000000000000101010010;
+	//         00001000010000000000000001010000
+	opcode=4'b0010;
+	#10
+	$write("[%32b]",inputB);
+ 	$write("[%32b]",inputA);
+ 	$write("[%4b]",opcode);
+ 	$write("[%32b]",outputC);
+ 	$write("[%2b]",error);
+	$write(":XOR two Integers");
+	$display(";");
+
+	//---------------------------------
+	// Expected output: 01001000010000000100100101010010
+	inputB=32'b01001000010000000100100001010000;
+	inputA=32'b00001000010000000000000101010010;
+	//         00001000010000000000000001010000
+	opcode=4'b0011;
+	#10
+	//$write("[%32b]",inputB);
+ 	$write("[%32b]",inputA);
+ 	$write("[%4b]",opcode);
+ 	$write("[%32b]",outputC);
+ 	$write("[%2b]",error);
+	$write(":Negate One Integer");
+	$display(";");
+
+	//---------------------------------
+	// Expected output: 01001000010000000100100101010010
+	inputB=32'b01001000010000000100100001010000;
+	inputA=32'b00001000010000000000000101010010;
+	//         00001000010000000000000001010000
+	opcode=4'b1001;
+	#10
+	$write("[%32b]",inputB);
+ 	$write("[%32b]",inputA);
+ 	$write("[%4b]",opcode);
+ 	$write("[%32b]",outputC);
+ 	$write("[%2b]",error);
+	$write(":NAND two Integers");
+	$display(";");
+
+	//---------------------------------
+	// Expected output: 01001000010000000100100101010010
+	inputB=32'b01001000010000000100100001010000;
+	inputA=32'b00001000010000000000000101010010;
+	//         00001000010000000000000001010000
+	opcode=4'b1010;
+	#10
+	$write("[%32b]",inputB);
+ 	$write("[%32b]",inputA);
+ 	$write("[%4b]",opcode);
+ 	$write("[%32b]",outputC);
+ 	$write("[%2b]",error);
+	$write(":NOR two Integers");
+	$display(";");
+
+	//---------------------------------
+	// Expected output: 01001000010000000100100101010010
+	inputB=32'b01001000010000000100100001010000;
+	inputA=32'b00001000010000000000000101010010;
+	//         00001000010000000000000001010000
+	opcode=4'b1011;
+	#10
+	$write("[%32b]",inputB);
+ 	$write("[%32b]",inputA);
+ 	$write("[%4b]",opcode);
+ 	$write("[%32b]",outputC);
+ 	$write("[%2b]",error);
+	$write(":XNOR two Integers");
+	$display(";");
+
+//---------------------------------
+
+	opcode=4'b1100;
+	#12
+	//$write("[%32b]",inputB);
+ 	$write("[%32b]",inputA);
+ 	$write("[%4b]",opcode);
+ 	$write("[%32b]",outputC);
+ 	$write("[%2b]",error);
+	$write(":No Op an integer");
 	$display(";");
 
 	$finish;
