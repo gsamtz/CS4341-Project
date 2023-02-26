@@ -10,6 +10,13 @@ module AND(a, b, c);
     assign c = a & b;
 endmodule
 
+module OR(a, b, c);
+    input [31:0] a, b;
+    output [31:0] c;
+
+    assign c = a | b;
+endmodule
+
 //=================================================================
 //
 //Decoder {NO NEED TO CHANGE}
@@ -361,6 +368,8 @@ wire       [ 1:0] unkErr;
 //----------
 wire [31:0] outputAND;
 
+wire [31:0] outputOR;
+
 //----------
 // ADDITION
 //----------
@@ -395,6 +404,7 @@ reg errLow;
 // Connect the MUX to the OpCodes
 //
 // Channel 0, Opcode 0000, AND ((NEW ADDITION TO THE LIST))
+// Channel 1, Opcode 0001, OR
 // Channel 4, Opcode 0100, Addition
 // Channel 5, Opcode 0101, Subtraction
 // Channel 6, Opcode 0110, Mulitplication
@@ -403,7 +413,7 @@ reg errLow;
 //
 //=======================================================
 assign channels[ 0]=outputAND; // (before) -> assign channels[ 0]=unknown;
-assign channels[ 1]=unknown;
+assign channels[ 1]=outputOR;
 assign channels[ 2]=unknown;
 assign channels[ 3]=unknown;
 assign channels[ 4]=outputADDSUB;
@@ -447,6 +457,8 @@ assign chErr[15]=unkErr;
 // for every new module that is added. For ex, I created "wire [31:0] outputAND" here to match
 // "output [31:0] c" in the original AND module so that the output could be mapped back here
 AND and1(B, A, outputAND); // ADDED THIS MODULE INSTANCE TO TEST IT OUT (IT WORKS!)
+OR or1(B, A, outputOR);
+
 ThirtyTwoBitAddSub add1(B, A, modeSUB, outputADDSUB, Carry, ADDerror);
 BehavioralDivision div1(B, A, outputQuotient, outputRemainder, DIVerror);
 StructMux4 muxOps(channels, select, b);
@@ -637,6 +649,21 @@ module testbench();
  	$write("[%32b]",outputC);
  	$write("[%2b]",error);
 	$write(":AND two Integers");
+	$display(";");
+
+	//---------------------------------
+	// Expected output: 01001000010000000100100101010010
+	inputB=32'b01001000010000000100100001010000;
+	inputA=32'b00001000010000000000000101010010;
+	//         00001000010000000000000001010000
+	opcode=4'b0001;
+	#10
+	$write("[%32b]",inputB);
+ 	$write("[%32b]",inputA);
+ 	$write("[%4b]",opcode);
+ 	$write("[%32b]",outputC);
+ 	$write("[%2b]",error);
+	$write(":OR two Integers");
 	$display(";");
 
 	$finish;
