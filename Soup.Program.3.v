@@ -1,8 +1,6 @@
-//=================================================================
-//
-// AND (32 bit AND)
-//
-//=================================================================
+//==============================
+// AND
+//==============================
 module AND(a, b, c);
     input [31:0] a, b;
     output [31:0] c;
@@ -10,6 +8,9 @@ module AND(a, b, c);
     assign c = a & b;
 endmodule
 
+//==============================
+// OR
+//==============================
 module OR(a, b, c);
     input [31:0] a, b;
     output [31:0] c;
@@ -17,6 +18,9 @@ module OR(a, b, c);
     assign c = a | b;
 endmodule
 
+//==============================
+// XOR	
+//==============================
 module XOR(a,b,c);
 	input [31:0] a,b;
 	output [31:0] c;
@@ -24,6 +28,9 @@ module XOR(a,b,c);
 	assign c= a ^ b;
 endmodule
 
+//==============================
+// XOR	
+//==============================
 module NOT(a,c);
 	input [31:0] a;
 	output [31:0] c;
@@ -31,6 +38,9 @@ module NOT(a,c);
 	assign c= ~a;
 endmodule
 
+//==============================
+// NAND
+//==============================
 module NAND(a,b,c);
 	input [31:0] a,b;
 	output [31:0] c;
@@ -38,6 +48,9 @@ module NAND(a,b,c);
 	assign c= a ~& b;
 endmodule
 
+//==============================
+// NOR
+//==============================
 module NOR(a,b,c);
 	input [31:0] a,b;
 	output [31:0] c;
@@ -45,6 +58,9 @@ module NOR(a,b,c);
 	assign c= a ~| b;
 endmodule
 
+//==============================
+// XNOR	
+//==============================
 module XNOR(a,b,c);
 	input [31:0] a,b;
 	output [31:0] c;
@@ -52,19 +68,22 @@ module XNOR(a,b,c);
 	assign c= a ~^ b;
 endmodule
 
+//==============================
+// NO-OP	
+//==============================
 module NOOP(a,c);
 	input [31:0] a;
 	output [31:0] c;
 
 	assign c= ~(~a);
 endmodule
-//=================================================================
+
+//==============================
 //
 // Decoder
 //
-//=================================================================
+//==============================
 module Dec4x16(binary, onehot);
-
 	input [3:0] binary;
 	output [15:0] onehot;
 
@@ -87,12 +106,11 @@ module Dec4x16(binary, onehot);
 
 endmodule
 
-
-//=================================================================
+//==============================
 //
 // Full Adder
 //
-//=================================================================
+//==============================
 module FullAdder(A, B, C, carry, sum);
 	input A;
 	input B;
@@ -117,14 +135,12 @@ always@(*)
 //---------------------------------------------
 endmodule
 
-
-//=================================================================
+//==============================
 //
 // Add/Subtract
 //
-//=================================================================
+//==============================
 module ThirtyTwoBitAddSub(inputA, inputB, mode, sum, carry, overflow);
-// Parameters
 	input [31:0] inputA; // {32} NOTE: EVERYWHERE YOU SEE A '31' WAS PREVIOUSLY A '15'
 	input [31:0] inputB;
     input mode;
@@ -230,21 +246,18 @@ module ThirtyTwoBitAddSub(inputA, inputB, mode, sum, carry, overflow);
 	FullAdder FA30(inputA[30],b30,	c30, c31,sum[30]);
 	FullAdder FA31(inputA[31],b31,	c31, c32,sum[31]);
 
-
-always@(*)
-begin
-	overflow = c32^c31;	// {32} Added this to support 32 bits
-end
+	always@(*)
+	begin
+		overflow = c32^c31;	// {32} Added this to support 32 bits
+	end
 
 endmodule
 
-
-
-//=================================================================
+//==============================
 //
 // BehavioralDivision
 //
-//=================================================================
+//==============================
 module BehavioralDivision(dividend, divisor, quotient, remainder, error);
     input [31:0] dividend; // {32} all values with '31' were changed from '15' for 32 bits
     input [31:0] divisor;
@@ -275,13 +288,11 @@ module BehavioralDivision(dividend, divisor, quotient, remainder, error);
 
 endmodule
 
-
-
-//=================================================================
+//==============================
 //
 // BehavioralMultiplication
 //
-//=================================================================
+//==============================
 module BehavioralMultiplication(inputA, inputB, outputC);
 	parameter n = 32;
 	input [n - 1 : 0] inputA, inputB;
@@ -295,11 +306,11 @@ module BehavioralMultiplication(inputA, inputB, outputC);
 endmodule
 
 
-//=================================================================
+//==============================
 //
 // StructMux4
 //
-//=================================================================
+//==============================
 module StructMux4(channels, select, b);
 	parameter n = 32;
 	parameter chansize=2*n;
@@ -326,19 +337,16 @@ module StructMux4(channels, select, b);
 
 endmodule
 
-
-
-//=================================================================
+//==============================
 //
 // StructMux2
 //
-//=================================================================
+//==============================
 module StructMux2(channels, select, b);
-parameter chansize=2;
-input [15:0][chansize-1:0] channels;
-input [15:0]               select;
-output      [chansize-1:0] b;
-
+	parameter chansize = 2;
+	input [15:0][chansize-1:0] channels;
+	input [15:0]               select;
+	output      [chansize-1:0] b;
 
 	assign b = ({chansize{select[15]}} & channels[15]) |
                ({chansize{select[14]}} & channels[14]) |
@@ -359,15 +367,14 @@ output      [chansize-1:0] b;
 
 endmodule
 
-
-
-//=================================================================
+//==============================
 //
 // DFF - Memory Register
 //
-//=================================================================
+//==============================
 module DFF(clk, in, out);
 	parameter n=1; //width
+
 	input clk;
 	input [n-1:0] in;
 	output [n-1:0] out;
@@ -377,277 +384,255 @@ module DFF(clk, in, out);
 	out = in;
 endmodule
 
-
-//=================================================================
+//==============================
 //
 // Breadboard
 //
-//=================================================================
+//==============================
 module breadboard(clk, rst, A, B, C, opcode, error);
-//=======================================================
-//
-// Parameter Definitions
-//
-//========================================================
-input clk;
-input rst;
-input [31:0] A;
-input [31:0] B;
-input [3:0] opcode;
+	//==============================
+	//
+	// Parameter Definitions
+	//
+	//==============================
+	input clk;
+	input rst;
+	input [31:0] A;
+	input [31:0] B;
+	input [3:0] opcode;
 
-output [63:0] C;
-output [1:0]error;
+	output [31:0] C;
+	output [1:0]error;
 
-wire clk;
-wire rst;
+	wire clk;
+	wire rst;
 
-wire [31:0] A;
-wire [31:0] B;
-wire [3:0] opcode;
+	wire [31:0] A;
+	wire [31:0] B;
+	wire [3:0] opcode;
 
-reg  [63:0] C;
-reg  [1:0] error;
+	reg  [31:0] C;
+	reg  [1:0] error;
 
-reg [31:0] regA; // changed from 64, both A & B
-reg [31:0] regB;
+	reg [31:0] regA; // changed from 64, both A & B
+	reg [31:0] regB;
 
-reg [63:0] next;
-wire [63:0] cur;
-
-
-//=======================================================
-//
-// CONTROL
-//
-//========================================================
-wire [15:0] select;
-Dec4x16 dec1(opcode, select);
-
-// wire [15:0][ 63:0] channels;
-wire [15:0][ 63:0] channels;
-wire       [ 63:0] b;
-wire       [ 31:0] unknown;
-
-wire [15:0][ 1:0]  chErr;
-wire       [ 1:0]   bErr;
-wire       [ 1:0] unkErr;
-
-//=======================================================
-//
-// INTERFACES
-//
-//=======================================================
-
-//-----------------------------------------------
-// AND, OR, XOR, NOT, NAND, NOR, XNOR, NOOP
-//-----------------------------------------------
-wire [31:0] outputAND;
-wire [31:0] outputOR;
-wire [31:0] outputXOR;
-wire [31:0] outputNOT;
-wire [31:0] outputNAND;
-wire [31:0] outputNOR;
-wire [31:0] outputXNOR;
-wire [31:0] outputNOOP;
-
-//----------
-// ADDITION
-//----------
-wire [31:0] outputADDSUB;
-wire ADDerror;
-wire Carry;
-
-//------------
-// SUBTRACTION
-//------------
-reg modeSUB;
-
-//-----------------
-// DIVISION/MODULUS
-//-----------------
-wire [31:0] outputQuotient;
-wire [31:0] outputRemainder;
-wire DIVerror;
-
-//----------------
-// Multiplication
-//----------------
-wire [63:0] outputProduct; // 32 * 32 = 64-bit product
-
-//=======================================================
-//
-// Error Reporting
-//
-//=======================================================
-reg errHigh;
-reg errLow;
-
-//=======================================================
-//
-// Connect the MUX to the OpCodes
-//
-// Channel 0, Opcode 0000, AND ((NEW ADDITION TO THE LIST))
-// Channel 1, Opcode 0001, OR
-// Channel 2, Opcode 0010, XOR
-// Channel 3, Opcode 0011, NOT
-// Channel 4, Opcode 0100, Addition
-// Channel 5, Opcode 0101, Subtraction
-// Channel 6, Opcode 0110, Mulitplication (Behavioral) (IMPLEMENTED - AS OF 03/30/2023)
-// Channel 7, Opcode 0111, Division (Behavioral)
-// Channel 8, Opcode 1000, Modulus (Behavioral)
-// Channel 9, Opcode 1001, NAND
-// Channel 10, Opcode 1010, NOR
-// Channel 11, Opcode 1011, XNOR
-// Channel 12, Opcode 1100, NOOP
-// Channel 15, Opcode 1111, RESET
-//=======================================================
-assign channels[ 0]={{32'b00000000000000000000000000000000}, outputAND}; // (before) -> assign channels[ 0]=unknown;
-assign channels[ 1]={{32'b00000000000000000000000000000000}, outputOR};
-assign channels[ 2]={{32'b00000000000000000000000000000000}, outputXOR};
-assign channels[ 3]={{32'b00000000000000000000000000000000}, outputNOT};
-assign channels[ 4]={{32'b00000000000000000000000000000000}, outputADDSUB};
-assign channels[ 5]={{32'b00000000000000000000000000000000}, outputADDSUB};
-assign channels[ 6]={outputProduct};
-assign channels[ 7]={{32'b00000000000000000000000000000000}, outputQuotient};
-assign channels[ 8]={{32'b00000000000000000000000000000000}, outputRemainder};
-assign channels[ 9]={{32'b00000000000000000000000000000000}, outputNAND};
-assign channels[10]={{32'b00000000000000000000000000000000}, outputNOR};
-assign channels[11]={{32'b00000000000000000000000000000000}, outputXNOR};
-assign channels[12]={{32'b00000000000000000000000000000000}, outputNOOP};
-// assign channels[12]={{32'b00000000000000000000000000000000}, cur};
-// assign channels[ 0]=outputAND; // (before) -> assign channels[ 0]=unknown;
-// assign channels[ 1]=outputOR;
-// assign channels[ 2]=outputXOR;
-// assign channels[ 3]=outputNOT;
-// assign channels[ 4]=outputADDSUB;
-// assign channels[ 5]=outputADDSUB;
-// assign channels[ 6]=outputProduct;
-// assign channels[ 7]=outputQuotient;
-// assign channels[ 8]=outputRemainder;
-// assign channels[ 9]=outputNAND;
-// assign channels[10]=outputNOR;
-// assign channels[11]=outputXNOR;
-// assign channels[12]=outputNOOP;
-// assign channels[12]=cur; // NO-OP
-assign channels[13]=0;
-assign channels[14]=0;
-assign channels[15]=0;
-
-assign chErr[ 0]=unkErr;
-assign chErr[ 1]=unkErr;
-assign chErr[ 2]=unkErr;
-assign chErr[ 3]=unkErr;
-assign chErr[ 4]={1'b0, errLow};
-assign chErr[ 5]={1'b0, errLow};
-assign chErr[ 6]=unkErr;
-assign chErr[ 7]={errHigh, 1'b0};
-assign chErr[ 8]={errHigh, 1'b0};
-assign chErr[ 9]=unkErr;
-assign chErr[10]=unkErr;
-assign chErr[12]=unkErr;
-assign chErr[11]=unkErr;
-assign chErr[13]=unkErr;
-assign chErr[14]=unkErr;
-assign chErr[15]=unkErr;
+	reg [63:0] next;
+	wire [63:0] cur;
 
 
-//===========================================================
-//
-// INSTANTIATE MODULES
-//
-//===========================================================
-AND and1(A, B, outputAND); // ADDED THIS MODULE INSTANCE TO TEST IT OUT (IT WORKS!)
-OR or1(A, B, outputOR);
-XOR xor1(A, B, outputXOR);
-NOT not1(A, outputNOT);
-NAND nand1(A, B, outputNAND);
-NOR nor1(A, B, outputNOR);
-XNOR xnor1(A, B, outputXNOR);
-NOOP noop1(A, outputNOOP); // something tells me A should be swapped out with cur per assignment instr
-ThirtyTwoBitAddSub add1(A, B, modeSUB, outputADDSUB, Carry, ADDerror);
-BehavioralDivision div1(A, B, outputQuotient, outputRemainder, DIVerror);
-BehavioralMultiplication mult1(A, B, outputProduct);
-StructMux4 muxOps(channels, select, b);
-StructMux2 muxErr(chErr, select, bErr);
+	//==============================
+	//
+	// CONTROL
+	//
+	//==============================
+	wire [15:0] select;
+	Dec4x16 dec1(opcode, select);
 
-//---------------------
-// Accumulator Register
-//---------------------
-//DFF ACC1 [63:0] (clk, next, cur);
+	wire [15:0][ 63:0] channels;
+	wire       [ 63:0] b;
+	wire       [ 31:0] unknown;
 
-//====================================================
-//
-// Perform the gate-level operations in the Breadboard
-//
-//====================================================
-always@(*)
-begin
-	// modules will have an Input and a feedback that comes from the accumulation register.
-	regA = A;
-	regB = cur[31:0];
+	wire [15:0][ 1:0]  chErr;
+	wire       [ 1:0]   bErr;
+	wire       [ 1:0] unkErr;
 
-	//Check for Subtraction Mode
-	modeSUB=~opcode[3]& opcode[2]&~opcode[1]& opcode[0];	// 0101, Channel 5
+	//==============================
+	//
+	// INTERFACES
+	//
+	//==============================
+	wire [31:0] outputAND;
+	wire [31:0] outputOR;
+	wire [31:0] outputXOR;
+	wire [31:0] outputNOT;
+	wire [31:0] outputNAND;
+	wire [31:0] outputNOR;
+	wire [31:0] outputXNOR;
+	wire [31:0] outputNOOP;
 
-	// Set output of Operations to C
-	C=b;
-	next=b;
-	errHigh=DIVerror;
-	errLow=ADDerror;
+	//----------
+	// ADDITION
+	//----------
+	wire [31:0] outputADDSUB;
+	wire ADDerror;
+	wire Carry;
 
-	// Set Errors of Operations to Error
-	error=bErr;
+	//------------
+	// SUBTRACTION
+	//------------
+	reg modeSUB;
 
-end
+	//-----------------
+	// DIVISION/MODULUS
+	//-----------------
+	wire [31:0] outputQuotient;
+	wire [31:0] outputRemainder;
+	wire DIVerror;
+
+	//----------------
+	// Multiplication
+	//----------------
+	wire [63:0] outputProduct; // 32 * 32 = 64-bit product
+
+	//==============================
+	//
+	// Error Reporting
+	//
+	//==============================
+	reg errHigh;
+	reg errLow;
+
+	//==============================
+	// Connect the MUX to the OpCodes
+	//==============================
+	assign channels[ 0]={{32'b00000000000000000000000000000000}, outputAND}; // (before) -> assign channels[ 0]=unknown;
+	assign channels[ 1]={{32'b00000000000000000000000000000000}, outputOR};
+	assign channels[ 2]={{32'b00000000000000000000000000000000}, outputXOR};
+	assign channels[ 3]={{32'b00000000000000000000000000000000}, outputNOT};
+	assign channels[ 4]={{32'b00000000000000000000000000000000}, outputADDSUB};
+	assign channels[ 5]={{32'b00000000000000000000000000000000}, outputADDSUB};
+	assign channels[ 6]={outputProduct};
+	assign channels[ 7]={{32'b00000000000000000000000000000000}, outputQuotient};
+	assign channels[ 8]={{32'b00000000000000000000000000000000}, outputRemainder};
+	assign channels[ 9]={{32'b00000000000000000000000000000000}, outputNAND};
+	assign channels[10]={{32'b00000000000000000000000000000000}, outputNOR};
+	assign channels[11]={{32'b00000000000000000000000000000000}, outputXNOR};
+	// assign channels[12]={{32'b00000000000000000000000000000000}, outputNOOP};
+	// assign channels[12]={{32'b00000000000000000000000000000000}, cur};
+	assign channels[12]=cur;
+	assign channels[13]=0;
+	assign channels[14]=0;
+	assign channels[15]=0;
+
+	// CONNECT ERROR CHANNELS
+	assign chErr[ 0]=unkErr;
+	assign chErr[ 1]=unkErr;
+	assign chErr[ 2]=unkErr;
+	assign chErr[ 3]=unkErr;
+	assign chErr[ 4]={1'b0, errLow};
+	assign chErr[ 5]={1'b0, errLow};
+	assign chErr[ 6]=unkErr;
+	assign chErr[ 7]={errHigh, 1'b0};
+	assign chErr[ 8]={errHigh, 1'b0};
+	assign chErr[ 9]=unkErr;
+	assign chErr[10]=unkErr;
+	assign chErr[12]=unkErr;
+	assign chErr[11]=unkErr;
+	assign chErr[13]=unkErr;
+	assign chErr[14]=unkErr;
+	assign chErr[15]=unkErr;
+
+	//==============================
+	//
+	// INSTANTIATE MODULES
+	//
+	//==============================
+	// UNCOMMENT THE BELOW TO DISPLAY CORRECT OUTPUT FOR PART-2's STIMULOUS THREAD
+	// AND and1(A, B, outputAND); // ADDED THIS MODULE INSTANCE TO TEST IT OUT (IT WORKS!)
+	// OR or1(A, B, outputOR);
+	// XOR xor1(A, B, outputXOR);
+	// NOT not1(A, outputNOT);
+	// NAND nand1(A, B, outputNAND);
+	// NOR nor1(A, B, outputNOR);
+	// XNOR xnor1(A, B, outputXNOR);
+	// NOOP noop1(A, outputNOOP); // something tells me A should be swapped out with cur per assignment instr
+	// ThirtyTwoBitAddSub add1(A, B, modeSUB, outputADDSUB, Carry, ADDerror);
+	// BehavioralDivision div1(A, B, outputQuotient, outputRemainder, DIVerror);
+	// BehavioralMultiplication mult1(A, B, outputProduct);
+	// StructMux4 muxOps(channels, select, b);
+	// StructMux2 muxErr(chErr, select, bErr);
+
+	AND and1(regA, regB, outputAND); // ADDED THIS MODULE INSTANCE TO TEST IT OUT (IT WORKS!)
+	OR or1(regA, regB, outputOR);
+	XOR xor1(regA, regB, outputXOR);
+	NOT not1(regA, outputNOT);
+	NAND nand1(regA, regB, outputNAND);
+	NOR nor1(regA, regB, outputNOR);
+	XNOR xnor1(regA, regB, outputXNOR);
+	NOOP noop1(regA, outputNOOP); // something tells me A should be swapped out with cur per assignment instr
+	ThirtyTwoBitAddSub add1(regA, regB, modeSUB, outputADDSUB, Carry, ADDerror);
+	BehavioralDivision div1(regA, regB, outputQuotient, outputRemainder, DIVerror);
+	BehavioralMultiplication mult1(regA, regB, outputProduct);
+	StructMux4 muxOps(channels, select, b);
+	StructMux2 muxErr(chErr, select, bErr);
+
+	//---------------------
+	// Accumulator Register
+	//---------------------
+	DFF ACC1 [63:0] (clk, next, cur);
+
+	//==================================
+	//
+	// Perform the gate-level operations
+	//
+	//==================================
+	always@(*) begin
+		// regA is normal 32-bit input
+		// regB is lower 32-bits from memory feedback loop
+		regA = cur[31:0];
+		regB = A;
+
+		// Toggle subtraction if necessary
+		modeSUB=~opcode[3]& opcode[2]&~opcode[1]& opcode[0];
+
+		// Set output of operations to 'C'
+		// C=b;
+		C = cur;
+		next=b;
+		errHigh=DIVerror;
+		errLow=ADDerror;
+
+		// Set errors of rperations to 'error'
+		error=bErr;
+	end
 
 endmodule
 
-
-//====================================================
+//==============================
 //
 // TEST BENCH
 //
-//====================================================
+//==============================
 module testbench();
-
-	//====================================================
+	//==============================
 	//
 	// Local Variables
 	//
-	//====================================================
+	//==============================
 	reg clk;
 	reg rst;
 	reg  [3:0] opcode;
 	reg  [31:0] inputB; // {32} changed from 32 to support 32 bits
 	reg  [31:0] inputA; // {32} changed from 32 to support 32 bits
-	wire [63:0] outputC; // {32} changed from 32 to support 32 bits
+	wire [31:0] outputC; // {32} changed from 32 to support 32 bits
 
 	wire [1:0] error;
 
-	//====================================================
+	//==============================
 	//
 	// Create Breadboard
 	//
-	//====================================================
+	//==============================
 	breadboard bb8(clk, rst, inputA, inputB, outputC, opcode, error);
 
-	//====================================================
+	//==============================
 	// CLOCK Thread
-	//====================================================
-	// initial begin// Start Stimulous Thread
-	// 	forever
-	// 		begin
-	// 			clk=0; // low square wave
-	// 			#5;
-	// 			clk=1;
-	// 			#5;
-	// 			$display("Tick");
-	// 		end
-	// end
+	//==============================
+	initial begin// Start Stimulous Thread
+		forever
+			begin
+				clk=0; // low square wave
+				#5;
+				clk=1;
+				#5;
+				$display("Tick");
+			end
+	end
 
-	//====================================================
+	//==============================
 	// Display Thread
-	//====================================================
+	//==============================
 	// Channel 0, Opcode 0000, AND ((NEW ADDITION TO THE LIST))
 	// Channel 1, Opcode 0001, OR
 	// Channel 2, Opcode 0010, XOR
@@ -662,333 +647,359 @@ module testbench();
 	// Channel 11, Opcode 1011, XNOR
 	// Channel 12, Opcode 1100, NOOP
 	// Channel 15, Opcode 1111, RESET
-// 	initial begin // Start output thread
-// 		forever
-// 			begin
-// 				case (opcode)
-// 				0:  $display("%8b AND %32b = %32b	, AND", bb8.cur, inputA, bb8.b);
-// 				1:  $display("%8b  OR %32b = %32b	, OR", bb8.cur, inputA, bb8.b);
-// 				2:  $display("%8b XOR %32b = %32b	, XOR", bb8.cur, inputA, bb8.b);
-// 				4:	$display("%8b  +  %32b = %32b	, ADD", bb8.cur, inputA, bb8.b);
-// 				6:	$display("%8b  *  %32b = %32b	, MULTIPLY", bb8.cur, inputA, bb8.b);
-// 				12: $display("%8b ==> %32b         , NO-OP", bb8.cur, bb8.b);
-// 				15: $display("%8b ==> %32b         , RESET", 32'b00000000000000000000000000000000, bb8.b);
-// 				endcase
+	initial begin // Start output thread
+		forever
+			begin
+				case (opcode)
+				0:  $display("%32b AND %32b = %32b, AND", bb8.cur[31:0], inputA, bb8.b);
+				1:  $display("%32b  OR %32b = %32b, OR", bb8.cur[31:0], inputA, bb8.b);
+				2:  $display("%32b XOR %32b = %32b, XOR", bb8.cur[31:0], inputA, bb8.b);
+				3:  $display("%32b ==> %32b, NOT", bb8.cur[31:0], bb8.b);
+				4:	$display("%32b + %32b = %32b, ADD", bb8.cur[31:0], inputA, bb8.b);
+				5:	$display("%32b - %32b = %32b, SUB", bb8.cur[31:0], inputA, bb8.b);
+				6:	$display("%32b * %32b = %32b, MULTIPLY", bb8.cur[31:0], inputA, bb8.b);
+				7:	$display("%32b / %32b = %32b, DIVIDE", bb8.cur[31:0], inputA, bb8.b);
+				8:	$display("%32b %% %32b = %32b, MODULUS", bb8.cur[31:0], inputA, bb8.b);
+				12: $display("%32b ==> %32b, NO-OP", bb8.cur[31:0], bb8.b);
+				15: $display("%32b ==> %32b, RESET", 32'b00000000000000000000000000000000, bb8.b);
+				endcase
 
-// 				#10;
-// 			end
-// 	end
-
-// 	//=================================================
-// 	//STIMULOUS Thread
-// 	//=================================================
-// 	initial begin // start stimulous thread
-// 		#6;
-// 		//---------------------------------
-// 		inputA=32'b00000000000000000000000000000000;
-// 		opcode=4'b1100;// NO-OP
-// 		#10; 
-// 		//---------------------------------
-// 		inputA=32'b00000000000000000000000000000000;
-// 		opcode=4'b1111;// RESET
-// 		#10;
-// 		//---------------------------------	
-// 		inputA=32'b00000000000000000001110001100100;
-// 		opcode=4'b0100;//ADD
-// 		#10;
-// 		//---------------------------------	
-// 		inputA=32'b00000000000000000000000000000001;
-// 		opcode=4'b0100;// ADD
-// 		#10;
-// 		//---------------------------------	
-// 		inputA=32'b00000000001000100000000000000001;
-// 		opcode=4'b0100;// ADD
-// 		#10;
-// 		//---------------------------------	
-// 		inputA=32'b00000100100000110000000110000000;
-// 		opcode=4'b0110; // MULTIPLY
-// 		#10;
-// 		//---------------------------------	
-// 		inputA=32'b00000000000000000000000000000000;
-// 		opcode=4'b1100;// NOOP
-// 		#10;
-// 		//---------------------------------	
-// 		inputA=32'b00000000000000000000000000000000;
-// 		opcode=4'b1111;// RESET
-// 		#10;
-// 		//---------------------------------	
-// 		inputA=32'b11111111111111111111111111111111;
-// 		opcode=4'b0100;// ADD
-// 		#10;
-// 		//---------------------------------	
-// 		inputA=32'b00000000000000000000000000000000;
-// 		opcode=4'b1100;// NOOP
-// 		#10;
-// 		//---------------------------------	
-// 		inputA=32'b00000001001000000000000000001011;
-// 		opcode=4'b0000;// AND
-// 		#10;
-// 		//---------------------------------	
-// 		inputA=32'b00000000000000000000000000000000;
-// 		opcode=4'b1100;// NOOP
-// 		//---------------------------------	
-// 		#5;
-// 		$display("Left in Ready State...OOPS!");
-// 		#5;
-// 		#50;
-// 		//---------------------------------	
-// 		inputA=32'b00000000000000000000000000000000;
-// 		opcode=4'b1111;// Reset
-// 		#10;
-// 		//---------------------------------	
-// 		inputA=32'b00;
-// 		opcode=4'b1100;// NOOP
-// 		#10;
-// 		//---------------------------------	
-// 		inputA=32'b00000000000000000000000000000001;
-// 		opcode=4'b0100;// ADD
-// 		#5;
-// 		$display("Left in ADD State...OOPS!");
-// 		#5;
-// 		// Uh-oh...it was left in the ADD operation...its an addtion STATE!
-// 		#100;
-// 		//---------------------------------	
-// 		inputA=32'b00000000000000000000000000000000;
-// 		opcode=4'b1111; // RESET
-// 		#10;
-// 		//---------------------------------	
-// 		inputA=32'b00000000000000000000000000000101;
-// 		opcode=4'b0100; // ADD
-// 		#10;
-// 		inputA=32'b00000000000000000000000000001010;
-// 		opcode=4'b0001; // OR
-// 		#10;		
-// 		inputA=32'b00000000000000000000000000001111;
-// 		opcode=4'b0010; // XOR
-// 		#10;
-// 		//---------------------------------	
-
-// 		$finish;
-// 	end
-// endmodule
-
-initial begin
-	#2;
-	//---------------------------------
-	$write("[   A]");
-	$write("                            [   B]");
-	$write("                            [  OP]");
-	$write("[   C]");
-	$write("                                                            [ E]");
-	$display(";");
-	//---------------------------------
-	// Expected output: 01010000100000000100100101010010
-	inputB=32'b00001000010000000000000100010010; // {32} changed to support 32 bits
-	inputA=32'b01001000010000000100100001000000; // {32} changed to support 32 bits
-	opcode=4'b0100; //ADD [ok]
-	#10;
-	$write("[%32b]", inputA);
- 	$write("[%32b]", inputB);
- 	$write("[%4b]", opcode);
-	$write("[%32b]", outputC);
- 	$write("[%2b]", error);
-	$write(":Addition");
-	$display(";");
-	//---------------------------------
-	// Expected output: 01000000000000000100011100101110
-	inputB=32'b00001000010000000000000100010010;
-	inputA=32'b01001000010000000100100001000000;
-	opcode=4'b0101; //SUB [ok]
-	#10;
-	$write("[%32b]",inputA);
- 	$write("[%32b]",inputB);
- 	$write("[%4b]",opcode);
- 	$write("[%32b]",outputC);
- 	$write("[%2b]",error);
-	$write(":Subtraction");
-	$display(";");
-	//---------------------------------
-	// Expected output: 00000000000000000000000000001101 (Some online tools truncate leading zeros)
-	inputB=32'b00000100001001100010010000100101;
-	inputA=32'b00111000010000000100100001000000;
-	opcode=4'b0111; //DIV [ok]
-	#10;
-	$write("[%32b]",inputA);
- 	$write("[%32b]",inputB);
- 	$write("[%4b]",opcode);
- 	$write("[%32b]",outputC);
- 	$write("[%2b]",error);
-	$write(":Division");
-	$display(";");
-	//---------------------------------
-	// Expected output: 00000010010100000111001001011111
-	inputB=32'b00000100001001100010010000100101;
-	inputA=32'b00111000010000000100100001000000;
-	opcode=4'b1000; //MOD [ok]
-	#10;
-	$write("[%32b]",inputA);
- 	$write("[%32b]",inputB);
- 	$write("[%4b]",opcode);
- 	$write("[%32b]",outputC);
- 	$write("[%2b]",error);
-	$write(":Modulus");
-	$display(";");
-	//---------------------------------
-	// Expected output: 011011100011001100110110001100101 <-- Result has 33 bits, hence the error
-	inputB=32'b01100100001001100010010000100101;
-	inputA=32'b01111000010000000100100001000000;
-	opcode=4'b0100; //Addition with Error -- OVERFLOW ERROR [ok]
-	#10;
-	$write("[%32b]",inputA);
- 	$write("[%32b]",inputB);
- 	$write("[%4b]",opcode);
-	$write("[%32b]",outputC);
- 	$write("[%2b]",error);
-	$write(":Addition with Error");
-	$display(";");
-	//---------------------------------
-	// Expected output: 01111111101111111011011111000000
-	inputB=32'b01000000010000000100100001000000;
-	inputA=32'b11000000000000000000000000000000;
-	opcode=4'b0101; //Subtraction with Error -- OVERFLOW ERROR [ok]
-	#10;
-	$write("[%32b]",inputA);
- 	$write("[%32b]",inputB);
- 	$write("[%4b]",opcode);
- 	$write("[%32b]",outputC);
- 	$write("[%2b]",error);
-	$write(":Subtraction with Error");
-	$display(";");
-	//---------------------------------
-	// Expected output: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-	inputB=32'b00000000000000000000000000000000;
-	inputA=32'b00001011100000000000000000000000;
-	opcode=4'b0111; //Division with Error -- (DIVIDE BY ZERO ERROR) [ok]
-	#10;
-	$write("[%32b]",inputA);
- 	$write("[%32b]",inputB);
- 	$write("[%4b]",opcode);
- 	$write("[%32b]",outputC);
- 	$write("[%2b]",error);
-	$write(":Division with Error");
-	$display(";");
-	//---------------------------------
-	// Expected output: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-	inputB=32'b00000000000000000000000000000000;
-	inputA=32'b00000000000000000000000000000100;
-	opcode=4'b1000; //Modulus with Error -- Mod by 0 is undefined [ok]
-	#10;
-	$write("[%32b]",inputA);
- 	$write("[%32b]",inputB);
- 	$write("[%4b]",opcode);
- 	$write("[%32b]",outputC);
- 	$write("[%2b]",error);
-	$write(":Modulus with Error");
-	$display(";");
-	//---------------------------------
-	// Expected output: 00001000010000000000000001010000
-	inputB=32'b00001000010000000000000101010010;
-	inputA=32'b01001000010000000100100001010000;
-	opcode=4'b0000; // AND [ok]
-	#10;
-	$write("[%32b]",inputA);
- 	$write("[%32b]",inputB);
- 	$write("[%4b]",opcode);
- 	$write("[%32b]",outputC);
- 	$write("[%2b]",error);
-	$write(":AND two Integers");
-	$display(";");
-	//---------------------------------
-	// Expected output: 01001000010000000100100101010010
-	inputB=32'b01001000010000000100100001010000;
-	inputA=32'b00001000010000000000000101010010;
-	opcode=4'b0001; // OR [ok]
-	#10;
-	$write("[%32b]",inputA);
- 	$write("[%32b]",inputB);
- 	$write("[%4b]",opcode);
- 	$write("[%32b]",outputC);
- 	$write("[%2b]",error);
-	$write(":OR two Integers");
-	$display(";");
-	//---------------------------------
-	// Expected output: 01000000000000000100100100000010
-	inputB=32'b01001000010000000100100001010000;
-	inputA=32'b00001000010000000000000101010010;
-	opcode=4'b0010; // XOR [ok]
-	#10;
-	$write("[%32b]",inputA);
- 	$write("[%32b]",inputB);
- 	$write("[%4b]",opcode);
- 	$write("[%32b]",outputC);
- 	$write("[%2b]",error);
-	$write(":XOR two Integers");
-	$display(";");
-	//---------------------------------
-	// Expected output: 11110111101111111111111010101101
-	inputB=32'b01001000010000000100100001010000;
-	inputA=32'b00001000010000000000000101010010;
-	opcode=4'b0011; // Negation [ok]
-	#10;
- 	$write("[%32b]",inputA);
-	$write("[xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx]");
- 	$write("[%4b]",opcode);
- 	$write("[%32b]",outputC);
- 	$write("[%2b]",error);
-	$write(":Negate One Integer");
-	$display(";");
-	//---------------------------------
-	// Expected output: 11110111101111111111111110101111
-	inputB=32'b00001000010000000000000101010010;
-	inputA=32'b01001000010000000100100001010000;
-	opcode=4'b1001; // NAND [ok]
-	#10;
-	$write("[%32b]",inputA);
- 	$write("[%32b]",inputB);
- 	$write("[%4b]",opcode);
- 	$write("[%32b]",outputC);
- 	$write("[%2b]",error);
-	$write(":NAND two Integers");
-	$display(";");
-	//---------------------------------
-	// Expected output: 10110111101111111011011010101101
-	inputB=32'b00001000010000000000000101010010;
-	inputA=32'b01001000010000000100100001010000;
-	opcode=4'b1010; // NOR [ok]
-	#10;
-	$write("[%32b]",inputA);
- 	$write("[%32b]",inputB);
- 	$write("[%4b]",opcode);
- 	$write("[%32b]",outputC);
- 	$write("[%2b]",error);
-	$write(":NOR two Integers");
-	$display(";");
-	//---------------------------------
-	// Expected output: 10111111111111111011011011111101
-	inputB=32'b01001000010000000100100001010000;
-	inputA=32'b00001000010000000000000101010010;
-	opcode=4'b1011; // XNOR [ok]
-	#10;
-	$write("[%32b]",inputA);
- 	$write("[%32b]",inputB);
- 	$write("[%4b]",opcode);
- 	$write("[%32b]",outputC);
- 	$write("[%2b]",error);
-	$write(":XNOR two Integers");
-	$display(";");
-	//---------------------------------
-	// NO-OP uses previous inputA
-	opcode=4'b1100; // NO-OP [ok]
-	#12;
- 	$write("[%32b]",inputA);
-	$write("[xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx]");
- 	$write("[%4b]",opcode);
- 	$write("[%32b]",outputC);
- 	$write("[%2b]",error);
-	$write(":No Op an integer");
-	$display(";");
-
-	$finish;
+				#10;
+			end
 	end
 
+	//==============================
+	//STIMULOUS Thread
+	//==============================
+	initial begin // start stimulous thread
+		#6;
+		//---------------------------------
+		inputA=32'b00000000000000000000000000000000;
+		opcode=4'b1100; // NO-OP
+		#10; 
+		//---------------------------------
+		inputA=32'b00000000000000000000000000000000;
+		opcode=4'b1111; // RESET
+		#10;
+		//---------------------------------	
+		inputA=32'b00000000000000000001110001100100;
+		opcode=4'b0100; //ADD
+		#10;
+		//---------------------------------	
+		inputA=32'b00000000000000000000000000000111;
+		opcode=4'b0101; // SUBTRACT
+		#10;
+		//---------------------------------	
+		inputA=32'b00000000001000100000000000000001;
+		opcode=4'b0100; // ADD
+		#10;
+		//---------------------------------	
+		inputA=32'b00000100100000110000000110000000;
+		opcode=4'b0110; // MULTIPLY
+		#10;
+		//---------------------------------	
+		inputA=32'b11101111010001001000110100000000;
+		opcode=4'b0000; // AND
+		#10;
+		//---------------------------------	
+		inputA=32'b00000000000000000000000000000000;
+		opcode=4'b1100; // NOOP
+		#10;
+		//---------------------------------	
+		inputA=32'b00000000000000000000000000000000;
+		opcode=4'b1111; // RESET
+		#10;
+		//---------------------------------	
+		inputA=32'b11111111111111111111111111111111;
+		opcode=4'b0100; // ADD
+		#10;
+		//---------------------------------	
+		inputA=32'b00000000000000000000000000000000;
+		opcode=4'b1100; // NOOP
+		#10;
+		//---------------------------------	
+		inputA=32'b00000001001000000000000000001011;
+		opcode=4'b0000; // AND
+		#10;
+		//---------------------------------	
+		inputA=32'b00000001001000000000000000001011;
+		opcode=4'b0011; // NOT
+		#10;
+		//---------------------------------	
+		inputA=32'b00000001001000000000000000001011;
+		opcode=4'b0111; // DIVIDE
+		#10;
+		//---------------------------------	
+		inputA=32'b00000000000000000000000000000011;
+		opcode=4'b1000; // MODULUS
+		#10;
+		//---------------------------------	
+		inputA=32'b00000000000000000000000000000000;
+		opcode=4'b1100; // NOOP
+		//---------------------------------	
+		#5;
+		$display("Left in Ready State...OOPS!");
+		#5;
+		#50;
+		//---------------------------------	
+		inputA=32'b00000000000000000000000000000000;
+		opcode=4'b1111; // Reset
+		#10;
+		//---------------------------------	
+		inputA=32'b00;
+		opcode=4'b1100; // NOOP
+		#10;
+		//---------------------------------	
+		inputA=32'b0000000010000000000000000000000;
+		opcode=4'b0100; // ADD
+		#5;
+		$display("Left in ADD State...OOPS!");
+		#5;
+		// Uh-oh...it was left in the ADD operation...its an addtion STATE!
+		#100;
+		//---------------------------------
+		inputA=32'b00000000000000000000000000000000;
+		opcode=4'b1111; // RESET
+		#10;
+		//---------------------------------
+		inputA=32'b00100010001000111100001100110101;
+		opcode=4'b0100; // ADD
+		#10;
+		//---------------------------------
+		inputA=32'b00000000000010000000100000001010;
+		opcode=4'b0001; // OR
+		#10;
+		//---------------------------------
+		inputA=32'b00000000000000000000000000001111;
+		opcode=4'b0010; // XOR
+		#10;
+		//---------------------------------
+
+		$finish;
+	end
 endmodule
+
+// !!!!
+// UNCOMMENT THE STIMULOUS BELOW TO ACCESS PART-2's OUTPUT
+// !!!!
+
+// initial begin
+// 	#2;
+// 	//---------------------------------
+// 	$write("[   A]");
+// 	$write("                            [   B]");
+// 	$write("                            [  OP]");
+// 	$write("[   C]");
+// 	$write("                                                            [ E]");
+// 	$display(";");
+// 	//---------------------------------
+// 	// Expected output: 01010000100000000100100101010010
+// 	inputB=32'b00001000010000000000000100010010; // {32} changed to support 32 bits
+// 	inputA=32'b01001000010000000100100001000000; // {32} changed to support 32 bits
+// 	opcode=4'b0100; //ADD [ok]
+// 	#10;
+// 	$write("[%32b]", inputA);
+//  	$write("[%32b]", inputB);
+//  	$write("[%4b]", opcode);
+// 	$write("[%32b]", outputC);
+//  	$write("[%2b]", error);
+// 	$write(":Addition");
+// 	$display(";");
+// 	//---------------------------------
+// 	// Expected output: 01000000000000000100011100101110
+// 	inputB=32'b00001000010000000000000100010010;
+// 	inputA=32'b01001000010000000100100001000000;
+// 	opcode=4'b0101; //SUB [ok]
+// 	#10;
+// 	$write("[%32b]",inputA);
+//  	$write("[%32b]",inputB);
+//  	$write("[%4b]",opcode);
+//  	$write("[%32b]",outputC);
+//  	$write("[%2b]",error);
+// 	$write(":Subtraction");
+// 	$display(";");
+// 	//---------------------------------
+// 	// Expected output: 00000000000000000000000000001101 (Some online tools truncate leading zeros)
+// 	inputB=32'b00000100001001100010010000100101;
+// 	inputA=32'b00111000010000000100100001000000;
+// 	opcode=4'b0111; //DIV [ok]
+// 	#10;
+// 	$write("[%32b]",inputA);
+//  	$write("[%32b]",inputB);
+//  	$write("[%4b]",opcode);
+//  	$write("[%32b]",outputC);
+//  	$write("[%2b]",error);
+// 	$write(":Division");
+// 	$display(";");
+// 	//---------------------------------
+// 	// Expected output: 00000010010100000111001001011111
+// 	inputB=32'b00000100001001100010010000100101;
+// 	inputA=32'b00111000010000000100100001000000;
+// 	opcode=4'b1000; //MOD [ok]
+// 	#10;
+// 	$write("[%32b]",inputA);
+//  	$write("[%32b]",inputB);
+//  	$write("[%4b]",opcode);
+//  	$write("[%32b]",outputC);
+//  	$write("[%2b]",error);
+// 	$write(":Modulus");
+// 	$display(";");
+// 	//---------------------------------
+// 	// Expected output: 011011100011001100110110001100101 <-- Result has 33 bits, hence the error
+// 	inputB=32'b01100100001001100010010000100101;
+// 	inputA=32'b01111000010000000100100001000000;
+// 	opcode=4'b0100; //Addition with Error -- OVERFLOW ERROR [ok]
+// 	#10;
+// 	$write("[%32b]",inputA);
+//  	$write("[%32b]",inputB);
+//  	$write("[%4b]",opcode);
+// 	$write("[%32b]",outputC);
+//  	$write("[%2b]",error);
+// 	$write(":Addition with Error");
+// 	$display(";");
+// 	//---------------------------------
+// 	// Expected output: 01111111101111111011011111000000
+// 	inputB=32'b01000000010000000100100001000000;
+// 	inputA=32'b11000000000000000000000000000000;
+// 	opcode=4'b0101; //Subtraction with Error -- OVERFLOW ERROR [ok]
+// 	#10;
+// 	$write("[%32b]",inputA);
+//  	$write("[%32b]",inputB);
+//  	$write("[%4b]",opcode);
+//  	$write("[%32b]",outputC);
+//  	$write("[%2b]",error);
+// 	$write(":Subtraction with Error");
+// 	$display(";");
+// 	//---------------------------------
+// 	// Expected output: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+// 	inputB=32'b00000000000000000000000000000000;
+// 	inputA=32'b00001011100000000000000000000000;
+// 	opcode=4'b0111; //Division with Error -- (DIVIDE BY ZERO ERROR) [ok]
+// 	#10;
+// 	$write("[%32b]",inputA);
+//  	$write("[%32b]",inputB);
+//  	$write("[%4b]",opcode);
+//  	$write("[%32b]",outputC);
+//  	$write("[%2b]",error);
+// 	$write(":Division with Error");
+// 	$display(";");
+// 	//---------------------------------
+// 	// Expected output: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+// 	inputB=32'b00000000000000000000000000000000;
+// 	inputA=32'b00000000000000000000000000000100;
+// 	opcode=4'b1000; //Modulus with Error -- Mod by 0 is undefined [ok]
+// 	#10;
+// 	$write("[%32b]",inputA);
+//  	$write("[%32b]",inputB);
+//  	$write("[%4b]",opcode);
+//  	$write("[%32b]",outputC);
+//  	$write("[%2b]",error);
+// 	$write(":Modulus with Error");
+// 	$display(";");
+// 	//---------------------------------
+// 	// Expected output: 00001000010000000000000001010000
+// 	inputB=32'b00001000010000000000000101010010;
+// 	inputA=32'b01001000010000000100100001010000;
+// 	opcode=4'b0000; // AND [ok]
+// 	#10;
+// 	$write("[%32b]",inputA);
+//  	$write("[%32b]",inputB);
+//  	$write("[%4b]",opcode);
+//  	$write("[%32b]",outputC);
+//  	$write("[%2b]",error);
+// 	$write(":AND two Integers");
+// 	$display(";");
+// 	//---------------------------------
+// 	// Expected output: 01001000010000000100100101010010
+// 	inputB=32'b01001000010000000100100001010000;
+// 	inputA=32'b00001000010000000000000101010010;
+// 	opcode=4'b0001; // OR [ok]
+// 	#10;
+// 	$write("[%32b]",inputA);
+//  	$write("[%32b]",inputB);
+//  	$write("[%4b]",opcode);
+//  	$write("[%32b]",outputC);
+//  	$write("[%2b]",error);
+// 	$write(":OR two Integers");
+// 	$display(";");
+// 	//---------------------------------
+// 	// Expected output: 01000000000000000100100100000010
+// 	inputB=32'b01001000010000000100100001010000;
+// 	inputA=32'b00001000010000000000000101010010;
+// 	opcode=4'b0010; // XOR [ok]
+// 	#10;
+// 	$write("[%32b]",inputA);
+//  	$write("[%32b]",inputB);
+//  	$write("[%4b]",opcode);
+//  	$write("[%32b]",outputC);
+//  	$write("[%2b]",error);
+// 	$write(":XOR two Integers");
+// 	$display(";");
+// 	//---------------------------------
+// 	// Expected output: 11110111101111111111111010101101
+// 	inputB=32'b01001000010000000100100001010000;
+// 	inputA=32'b00001000010000000000000101010010;
+// 	opcode=4'b0011; // Negation [ok]
+// 	#10;
+//  	$write("[%32b]",inputA);
+// 	$write("[xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx]");
+//  	$write("[%4b]",opcode);
+//  	$write("[%32b]",outputC);
+//  	$write("[%2b]",error);
+// 	$write(":Negate One Integer");
+// 	$display(";");
+// 	//---------------------------------
+// 	// Expected output: 11110111101111111111111110101111
+// 	inputB=32'b00001000010000000000000101010010;
+// 	inputA=32'b01001000010000000100100001010000;
+// 	opcode=4'b1001; // NAND [ok]
+// 	#10;
+// 	$write("[%32b]",inputA);
+//  	$write("[%32b]",inputB);
+//  	$write("[%4b]",opcode);
+//  	$write("[%32b]",outputC);
+//  	$write("[%2b]",error);
+// 	$write(":NAND two Integers");
+// 	$display(";");
+// 	//---------------------------------
+// 	// Expected output: 10110111101111111011011010101101
+// 	inputB=32'b00001000010000000000000101010010;
+// 	inputA=32'b01001000010000000100100001010000;
+// 	opcode=4'b1010; // NOR [ok]
+// 	#10;
+// 	$write("[%32b]",inputA);
+//  	$write("[%32b]",inputB);
+//  	$write("[%4b]",opcode);
+//  	$write("[%32b]",outputC);
+//  	$write("[%2b]",error);
+// 	$write(":NOR two Integers");
+// 	$display(";");
+// 	//---------------------------------
+// 	// Expected output: 10111111111111111011011011111101
+// 	inputB=32'b01001000010000000100100001010000;
+// 	inputA=32'b00001000010000000000000101010010;
+// 	opcode=4'b1011; // XNOR [ok]
+// 	#10;
+// 	$write("[%32b]",inputA);
+//  	$write("[%32b]",inputB);
+//  	$write("[%4b]",opcode);
+//  	$write("[%32b]",outputC);
+//  	$write("[%2b]",error);
+// 	$write(":XNOR two Integers");
+// 	$display(";");
+// 	//---------------------------------
+// 	// NO-OP uses previous inputA
+// 	opcode=4'b1100; // NO-OP [ok]
+// 	#12;
+//  	$write("[%32b]",inputA);
+// 	$write("[xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx]");
+//  	$write("[%4b]",opcode);
+//  	$write("[%32b]",outputC);
+//  	$write("[%2b]",error);
+// 	$write(":No Op an integer");
+// 	$display(";");
+
+// 	$finish;
+// 	end
+
+// endmodule
